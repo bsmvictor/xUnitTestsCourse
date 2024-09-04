@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\victo\\Documents\\Testes Unitarios C#\\Calculadora\\Calculadora.csproj": {}
+    "/Users/victorboaventura/Documents/GitHub/xUnitTestsCourse/Calculadora/Calculadora.csproj": {}
   },
   "projects": {
-    "C:\\Users\\victo\\Documents\\Testes Unitarios C#\\Calculadora\\Calculadora.csproj": {
+    "/Users/victorboaventura/Documents/GitHub/xUnitTestsCourse/Calculadora/Calculadora.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\victo\\Documents\\Testes Unitarios C#\\Calculadora\\Calculadora.csproj",
+        "projectUniqueName": "/Users/victorboaventura/Documents/GitHub/xUnitTestsCourse/Calculadora/Calculadora.csproj",
         "projectName": "Calculadora",
-        "projectPath": "C:\\Users\\victo\\Documents\\Testes Unitarios C#\\Calculadora\\Calculadora.csproj",
-        "packagesPath": "C:\\Users\\victo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\victo\\Documents\\Testes Unitarios C#\\Calculadora\\obj\\",
+        "projectPath": "/Users/victorboaventura/Documents/GitHub/xUnitTestsCourse/Calculadora/Calculadora.csproj",
+        "packagesPath": "/Users/victorboaventura/.nuget/packages/",
+        "outputPath": "/Users/victorboaventura/Documents/GitHub/xUnitTestsCourse/Calculadora/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\victo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/victorboaventura/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -58,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
