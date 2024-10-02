@@ -35,7 +35,7 @@ jobs:
       run: dotnet test --configuration ${{ matrix.configuration }} --logger "trx;LogFileName=TestResults.trx"
 
     - name: Publicar relatórios de teste
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: TestResults
         path: '**/*.trx'
@@ -69,7 +69,7 @@ jobs:
       run: dotnet build --configuration ${{ matrix.configuration }}
 
     - name: Publicar artefatos de build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: Build
         path: '**/bin/${{ matrix.configuration }}/'
