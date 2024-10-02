@@ -1,69 +1,84 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline for .NET Core
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   # Job 1: Testes
   tests:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Utilizando Windows como ambiente de execução
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v2
+    - name: Checkout do código
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-      - name: Configurar .NET Core
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '6.0.x'
+    - name: Instalar o .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
-      - name: Restaurar pacotes do NuGet
-        run: dotnet restore
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
 
-      - name: Executar testes
-        run: dotnet test --logger "trx;LogFileName=TestResults.trx"
+    - name: Restaurar pacotes do NuGet
+      run: dotnet restore
 
-      - name: Publicar relatórios de teste
-        uses: actions/upload-artifact@v3
-        with:
-          name: TestResults
-          path: TestResults.trx
+    - name: Executar testes unitários
+      run: dotnet test --configuration ${{ matrix.configuration }} --logger "trx;LogFileName=TestResults.trx"
+
+    - name: Publicar relatórios de teste
+      uses: actions/upload-artifact@v2
+      with:
+        name: TestResults
+        path: '**/*.trx'
 
   # Job 2: Empacotamento (Build)
   build:
-    runs-on: ubuntu-latest
-    needs: tests # Depende dos testes
+    runs-on: windows-latest
+    needs: tests # Executa o build após os testes serem concluídos
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v2
+    - name: Checkout do código
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-      - name: Configurar .NET Core
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '6.0.x'
+    - name: Instalar o .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
-      - name: Restaurar pacotes do NuGet
-        run: dotnet restore
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
 
-      - name: Compilar o projeto
-        run: dotnet build --configuration Release
+    - name: Restaurar pacotes do NuGet
+      run: dotnet restore
 
-      - name: Publicar artefato
-        uses: actions/upload-artifact@v3
-        with:
-          name: Build
-          path: ./bin/Release/
+    - name: Compilar o projeto
+      run: dotnet build --configuration ${{ matrix.configuration }}
 
-  # Job 3: Notificação
+    - name: Publicar artefatos de build
+      uses: actions/upload-artifact@v2
+      with:
+        name: Build
+        path: '**/bin/${{ matrix.configuration }}/'
+
+  # Job 3: Notificação (rodando em paralelo)
   notification:
     runs-on: ubuntu-latest
-    needs: [tests, build] # Executa após os testes e o build
+    needs: [tests, build] # Roda após os testes e build
     steps:
-      - name: Enviar notificação por e-mail
-        run: |
-          echo "Pipeline executado com sucesso!" | mail -s "Notificação CI/CD" ${{ secrets.EMAIL }}
-
+    - name: Enviar notificação por e-mail
+      run: |
+        echo "Pipeline executado com sucesso!" | mail -s "Notificação CI/CD" ${{ secrets.EMAIL }}
