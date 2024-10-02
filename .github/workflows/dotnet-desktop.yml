@@ -32,12 +32,12 @@ jobs:
       run: dotnet restore
 
     - name: Executar testes unitários
-      run: dotnet test --configuration ${{ matrix.configuration }} --logger "trx;LogFileName=TestResults.trx"
+      run: dotnet test --configuration ${{ matrix.configuration }} --logger "trx;LogFileName=TestResults_${{ matrix.configuration }}.trx"
 
     - name: Publicar relatórios de teste
       uses: actions/upload-artifact@v3
       with:
-        name: TestResults
+        name: TestResults_${{ matrix.configuration }}_${{ github.run_id }}
         path: '**/*.trx'
 
   # Job 2: Empacotamento (Build)
@@ -71,12 +71,13 @@ jobs:
     - name: Publicar artefatos de build
       uses: actions/upload-artifact@v3
       with:
-        name: Build
+        name: Build_${{ matrix.configuration }}_${{ github.run_id }}
         path: '**/bin/${{ matrix.configuration }}/'
 
   # Job 3: Notificação (rodando em paralelo)
   notification:
     runs-on: ubuntu-latest
+    needs: [tests, build] # Roda após os testes e build
     steps:
     - name: Install mailutils
       run: sudo apt-get update && sudo apt-get install -y mailutils
